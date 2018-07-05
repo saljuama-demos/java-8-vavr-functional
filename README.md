@@ -1,13 +1,5 @@
 # DOJO: JAVA 8 FUNCTIONAL
 
-## Lambdas
-
-A lambda expression is an anonymous function that can be: 
-
- - assigned to a variable
- - passed to a method
- - returned from a method
-
 
 ## Functional Interfaces
 
@@ -24,9 +16,33 @@ generic and primitive specialization flavours (see on the sections below).
 
 The most commonly used functional interfaces are:
 
+### Suppliers
+
+This `Function` specialization, takes no inputs and returns **lazily generate values**.
+
+#### Generic format
+
+```java
+@FunctionalInterface
+interface Supplier<T> {
+    T get(); 
+}
+```
+
+#### Primitive Specializations
+
+- `BooleanSupplier`
+- `IntSupplier`
+- `LongSupplier`
+- `DoubleSupplier`
+
+It is worthy to mention that these specializations have specific names for the SAM method, in order to prevent the 
+compiler to complain about ambiguous method signatures. 
+
+
 ### Predicates
 
-This functional interface is used to **evaluate conditions**. Given some input(s), return a boolean.
+This `Function` specialization, takes an input and returns the result of **evaluating conditions** based on the given input.
  
 #### Generic format
 
@@ -48,7 +64,7 @@ There is also a `BiPredicate<T,U>` which is the same as `Predicate<T>` but accep
 - `LongPredicate`
 - `DoublePredicate`
 
-#### VAVR
+#### VAVR 
 
 VAVR offers some helpers, found in the `io.vavr.Predicates` class, to ease the composition of multiple predicates, and to 
 to use predicates with collections.
