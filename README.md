@@ -40,6 +40,41 @@ It is worthy to mention that these specializations have specific names for the S
 compiler to complain about ambiguous method signatures. 
 
 
+### Consumers
+
+This `Function` specialization, consumes an input and does not return anything. The most common use case is to use them
+as finishers / sinks in a chain of function compositions.
+
+Due to this interface not returning any value, testing `Consumers` is not straightforward, having to resort to 
+verification testing.
+
+#### Generic format
+
+```java
+@FunctionalInterface
+interface Consumer<T> {
+    void accept(T input);
+    default Consumer<T> andThen(Consumer<T> after) { ... };
+}
+```
+
+#### Primitive Specializations
+
+- `IntConsumer`
+- `LongConsumer`
+- `DoubleConsumer`
+- `ObjIntConsumer<T>`
+- `ObjLongConsumer<T>`
+- `ObjDoubleConsumer<T>`
+
+#### VAVR
+
+Lambdas do not play well with throwing checked exceptions. In the event integration with a 3rd party library is required,
+VAVR offers the `CheckedConsumer<T>` interface that adds to the `accept` method the throwing Exception signature.
+
+This could also be achieved by creating a custom `@FunctionalInterface` with a `throws` in the abstract method signature.
+
+
 ### Predicates
 
 This `Function` specialization, takes an input and returns the result of **evaluating conditions** based on the given input.
