@@ -19,6 +19,7 @@ generic and primitive specialization flavours (see on the sections below).
 
 The most commonly used functional interfaces are:
 
+
 ### Functions
 
 This functional interface represents a function that takes one input and returns an output. 
@@ -118,6 +119,30 @@ But in the event integration with a 3rd party library is required, and the inter
 VAVR offers the `CheckedConsumer<T>` interface that adds to the `accept` method the throwing Exception signature.
 
 This could also be achieved by creating a custom `@FunctionalInterface` with a `throws` in the abstract method signature.
+
+
+### Operators
+
+This `Function` specialization, are still functions but limited to one single type for all inputs and output.
+
+#### Generic format
+
+```java
+@FunctionalInterface
+public interface UnaryOperator<T> extends Function<T, T> { ... }
+
+@FunctionalInterface
+public interface BinaryOperator<T> extends BiFunction<T, T, T> { ... }
+```
+
+#### Primitive specializations
+
+- IntUnaryOperator
+- LongUnaryOperator
+- DoubleUnaryOperator
+- IntBinaryOperator
+- LongBinaryOperator
+- DoubleBinaryOperator
 
 
 ### Predicates
