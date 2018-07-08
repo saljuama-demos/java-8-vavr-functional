@@ -1,6 +1,7 @@
 package com.saljuama.dojo.javafunctional.interfaces;
 
 import io.vavr.CheckedConsumer;
+import io.vavr.collection.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
@@ -47,9 +48,8 @@ public class ConsumersTest {
     @Test
     public void there_are_also_bi_consumers() {
 
-        BiConsumer<String, Integer> multiGreeter = (name, times) -> {
-            for (int i = 0; i < times; i++) greeter.simpleGreeting(name);
-        };
+        BiConsumer<String, Integer> multiGreeter = (name, times) ->
+                Stream.from(0).take(times).forEach(x -> greeter.simpleGreeting(name));
 
         multiGreeter.accept("World", 5);
 
