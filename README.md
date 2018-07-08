@@ -173,3 +173,51 @@ There is also a `BiPredicate<T,U>` which is the same as `Predicate<T>` but accep
 
 VAVR offers some helpers, found in the `io.vavr.Predicates` class, to ease the composition of multiple predicates, and to 
 to use predicates with collections.
+
+
+## Other FP features (with VAVR)
+
+Functional Programming is not just including functions and that is it, there are more features to it, that Java didn't 
+bring into the language, but VAVR did bring some of them.
+
+The limitation is, that these features are provided in the VAVR functional interfaces `FunctionX` and not in the Java ones.
+
+
+### Currying
+
+Currying is function decomposition, breaking down a function that takes several parameters into a series of functions 
+that only accept one single parameter.
+
+This enables to pass parameters one at a time to a function:
+
+```
+f(x,y,z) -> f(x)(y)(z)
+```
+
+### Partial application
+
+Partial application refers to the process of fixing a number of arguments to a function, producing another function of smaller arity.
+
+This is different than currying in: 
+
+- With partial application, more than one parameter can be passed at a given time, while in currying only one can be passed at a time.
+- The result of a partial application is a function with an arity that can be more than one, and with currying, the result
+is always a series of functions with arity = 1 always. 
+
+```
+f(x,y,z) -> f(x,y)(z)  or  f(x)(y,z)  or  f(x)(y)(z)
+```
+
+### Lifting
+
+Lifting is to transform a partial function (function that it is not defined for all inputs) into a total function (it is 
+defined for all the inputs).
+
+VAVR achieves this by wrapping the output of the function with the `Option` monad, and returning `None` for the values
+where the partial function is not defined (an exception is thrown), and `Some(value)` for those inputs where the function
+is defined.
+
+### Memoization
+
+Memoization is an optimization technique used primarily to speed up computer programs by storing the results of expensive
+function calls and returning the cached result when the same inputs occur again.
