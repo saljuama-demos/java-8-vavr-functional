@@ -3,6 +3,9 @@
 
 ## Functional Interfaces
 
+In a functional programming language, functions are first class citizen. Java is not a functional programming language, 
+but Java 8 brought some features from the FP paradigm, in the form of lambdas and functional interfaces.
+
 Any interface with a SAM (Single Abstract Method) is a functional interface, and the recommendation is that they are 
 annotated with the informational `@FunctionalInterface` annotation, as the compiler can emmit an error in case there are
 multiple abstract methods in it, but it is not mandatory. When multiple methods are present in a functional interface, 
@@ -15,6 +18,47 @@ of common functional interfaces, they can be found in the `java.util.function` p
 generic and primitive specialization flavours (see on the sections below).
 
 The most commonly used functional interfaces are:
+
+### Functions
+
+This functional interface represents a function that takes one input and returns an output. 
+
+#### Generic format
+
+```java
+@FunctionalInterface
+public interface Function<T, R> {
+    R apply(T var1);
+    default <V> Function<V, R> compose(Function<V, T> otherFunction) { ... }
+    default <V> Function<T, V> andThen(Function<R, V> otherFunction) { ... }
+}
+```
+
+#### Primitive specializations
+
+- IntFunction<T>
+- LongFunction<T>
+- DoubleFunction<T>
+- IntToLongFunction
+- IntToDoubleFunction
+- LongToIntFunction
+- LongToDoubleFunction
+- DoubleToIntFunction
+- DoubleToLongFunction
+- ToIntFunction<T>
+- ToLongFunction<T>
+- ToDoubleFunction<T>
+
+#### VAVR
+
+Java offers functional interfaces for functions with 1 or 2 parameters. VAVR offers interfaces for functions that take
+from 0 parameters to 8 parameters.
+
+Java lambdas do not play well with throwing checked exceptions, so the recommendation is to use unchecked exceptions.
+But in the event integration with a 3rd party library is required, and the interfaces throw checked exceptions,
+VAVR offers the `CheckedFunctionX` interfaces, from 0 to 8, with the `apply` method that includes the throwing exception
+in the signature.
+
 
 ### Suppliers
 
@@ -69,7 +113,8 @@ interface Consumer<T> {
 
 #### VAVR
 
-Lambdas do not play well with throwing checked exceptions. In the event integration with a 3rd party library is required,
+Java lambdas do not play well with throwing checked exceptions, so the recommendation is to use unchecked exceptions.
+But in the event integration with a 3rd party library is required, and the interfaces throw checked exceptions,
 VAVR offers the `CheckedConsumer<T>` interface that adds to the `accept` method the throwing Exception signature.
 
 This could also be achieved by creating a custom `@FunctionalInterface` with a `throws` in the abstract method signature.
