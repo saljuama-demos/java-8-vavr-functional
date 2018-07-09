@@ -2,12 +2,13 @@ package com.saljuama.dojo.javafunctional.functionalfeatures;
 
 import io.vavr.Function2;
 import io.vavr.control.Option;
+import io.vavr.control.Try;
 import org.junit.Test;
 
 import static io.vavr.control.Option.none;
 import static io.vavr.control.Option.some;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static io.vavr.control.Try.success;
+import static org.junit.Assert.*;
 
 public class LiftingTest {
 
@@ -27,5 +28,16 @@ public class LiftingTest {
 
         assertEquals(some(4), safeDivideBy.apply(8, 2));
         assertEquals(none(), safeDivideBy.apply(1, 0));
+    }
+
+    @Test
+    public void partial_functions_can_be_lifted_with_try_too() {
+
+        Function2<Integer, Integer, Integer> divideBy = (a, b) -> a / b;
+
+        Function2<Integer, Integer, Try<Integer>> safeDivideBy = Function2.liftTry(divideBy);
+
+        assertEquals(success(4), safeDivideBy.apply(8, 2));
+        assertTrue(safeDivideBy.apply(1, 0).isFailure());
     }
 }
