@@ -1,6 +1,7 @@
 package com.saljuama.dojo.javafunctional.functionalinterfaces;
 
 import io.vavr.CheckedFunction1;
+import io.vavr.Function0;
 import io.vavr.Function3;
 import io.vavr.Function8;
 import io.vavr.collection.Stream;
@@ -52,18 +53,6 @@ public class FunctionsTest {
     }
 
     @Test
-    public void vavr_offers_multiple_parameter_helpers() {
-
-        Function3<Integer, Integer, Integer, String> sumThreeAndStringify =
-                (a, b, c) -> ((Integer) (a + b + c)).toString();
-        assertEquals("6", sumThreeAndStringify.apply(1, 2, 3));
-
-        Function8<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, String> sumEightAndStringify =
-                (a, b, c, d, e, f, g, h) -> ((Integer) (a + b + c + d + e + f + g + h)).toString();
-        assertEquals("8", sumEightAndStringify.apply(1, 1, 1, 1, 1, 1, 1, 1));
-    }
-
-    @Test
     public void there_are_also_primitive_specializations() {
 
         IntFunction<String> intFunction = number -> "number " + number;
@@ -101,6 +90,21 @@ public class FunctionsTest {
 
         ToDoubleFunction<String> toDoubleFunction = string -> Double.parseDouble(string);
         assertEquals(10.50, toDoubleFunction.applyAsDouble("10.50"), 0.0);
+    }
+
+    @Test
+    public void vavr_offers_multiple_parameter_helpers() {
+
+        Function0<String> greeter = () -> "Hello!";
+        assertEquals("Hello!", greeter.apply());
+
+        Function3<Integer, Integer, Integer, String> sumThreeAndStringify =
+                (a, b, c) -> ((Integer) (a + b + c)).toString();
+        assertEquals("6", sumThreeAndStringify.apply(1, 2, 3));
+
+        Function8<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, String> sumEightAndStringify =
+                (a, b, c, d, e, f, g, h) -> ((Integer) (a + b + c + d + e + f + g + h)).toString();
+        assertEquals("8", sumEightAndStringify.apply(1, 1, 1, 1, 1, 1, 1, 1));
     }
 
     @Test(expected = NumberFormatException.class)
