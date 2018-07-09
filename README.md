@@ -1,4 +1,4 @@
-# DOJO: JAVA 8 FUNCTIONAL
+# JAVA 8 VAVR FUNCTIONAL
 
 
 ## Functional Interfaces
