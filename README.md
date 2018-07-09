@@ -1,5 +1,8 @@
 # JAVA 8 VAVR FUNCTIONAL
 
+This repository is used as a demonstration of the features related to functions included in Java 8, and also the ones
+provided by the [VAVR](http://www.vavr.io/) library.
+
 
 ## Functional Interfaces
 
