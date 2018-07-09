@@ -1,4 +1,4 @@
-package com.saljuama.dojo.javafunctional.interfaces;
+package com.saljuama.dojo.javafunctional.functionalinterfaces;
 
 import io.vavr.CheckedFunction1;
 import io.vavr.Function3;

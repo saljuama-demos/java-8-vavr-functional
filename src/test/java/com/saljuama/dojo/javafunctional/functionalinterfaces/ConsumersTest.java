@@ -1,4 +1,4 @@
-package com.saljuama.dojo.javafunctional.interfaces;
+package com.saljuama.dojo.javafunctional.functionalinterfaces;
 
 import io.vavr.CheckedConsumer;
 import io.vavr.collection.Stream;
