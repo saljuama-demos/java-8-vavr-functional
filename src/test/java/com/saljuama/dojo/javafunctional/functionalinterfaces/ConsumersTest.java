@@ -17,17 +17,12 @@ import static org.mockito.Mockito.verify;
 public class ConsumersTest {
 
     private class DummyGreeter {
-        void simpleGreeting(String name) {
-            System.out.println("Hi " + name);
-        }
+        void simpleGreeting(String name) {}
 
-        void enthusiasticGreeting(String name) {
-            System.out.println("Heeeey " + name + " !!!");
-        }
+        void enthusiasticGreeting(String name) {}
 
         void throwingGreeting(String name) throws InterruptedException {
             Thread.sleep(10L);
-            simpleGreeting(name);
         }
     }
 
@@ -58,22 +53,22 @@ public class ConsumersTest {
 
     @Test
     public void there_are_also_primitive_specializations() {
-        IntConsumer intConsumer = number -> System.out.println(number);
+        IntConsumer intConsumer = number -> { /* do some work*/ };
         intConsumer.accept(10);
 
-        LongConsumer longConsumer = number -> System.out.println(number);
+        LongConsumer longConsumer = number -> { /* do some work*/ };
         longConsumer.accept(10L);
 
-        DoubleConsumer doubleConsumer = number -> System.out.println(number);
+        DoubleConsumer doubleConsumer = number -> { /* do some work*/ };
         doubleConsumer.accept(10.50);
 
-        ObjIntConsumer<String> objIntConsumer = (name, number) -> System.out.println(name + " " + number);
+        ObjIntConsumer<String> objIntConsumer = (name, number) -> { /* do some work*/ };
         objIntConsumer.accept("hello world", 10);
 
-        ObjLongConsumer<String> objLongConsumer = (name, number) -> System.out.println(name + " " + number);
+        ObjLongConsumer<String> objLongConsumer = (name, number) -> { /* do some work*/ };
         objLongConsumer.accept("hello world", 10L);
 
-        ObjDoubleConsumer<String> objDoubleConsumer = (name, number) -> System.out.println(name + " " + number);
+        ObjDoubleConsumer<String> objDoubleConsumer = (name, number) -> { /* do some work*/ };
         objDoubleConsumer.accept("hello world", 10.50);
     }
 

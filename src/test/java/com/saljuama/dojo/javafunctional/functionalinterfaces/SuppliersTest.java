@@ -1,26 +1,38 @@
 package com.saljuama.dojo.javafunctional.functionalinterfaces;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.function.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class SuppliersTest {
+
+    private class DummySupplier {
+        String supplyGreet() {
+            return "Hello World";
+        }
+    }
+
+    @Spy
+    private final DummySupplier dummy = new DummySupplier();
 
     @Test
     public void suppliers_are_used_to_lazily_generate_values() {
 
-        Supplier<String> sayHello = () -> {
-            System.out.println("I'm generating the value now");
-            return "Hello World";
-        };
+        Supplier<String> sayHello = () -> dummy.supplyGreet();
 
-        System.out.println("I didn't generate the value yet, because I didn't invoke get()");
-
+        verify(dummy, never()).supplyGreet();
         assertEquals("Hello World", sayHello.get());
+        verify(dummy).supplyGreet();
     }
 
     @Test

@@ -20,8 +20,8 @@ public class LiftingTest {
         try {
             divideBy.apply(1, 0);
             fail("when divideBy 0 does not throw an exception");
-        } catch (Exception e) {
-            System.out.println("divide by is not a total function because is not defined for b=0, so it is a partial function");
+        } catch (Exception ignored) {
+            // divide by is not a total function because is not defined for b=0, so it is a partial function
         }
 
         Function2<Integer, Integer, Option<Integer>> safeDivideBy = Function2.lift(divideBy);

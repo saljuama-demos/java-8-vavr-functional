@@ -2,30 +2,39 @@ package com.saljuama.dojo.javafunctional.functionalfeatures;
 
 import io.vavr.*;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class PartialApplicationTest {
+
+    private class LazyDummy {
+        void doNothing() {}
+    }
+
+    @Spy
+    private final LazyDummy dummy = new LazyDummy();
 
     @Test
     public void functions_can_be_partially_applied_and_evaluated_lazily() {
 
         Function2<Integer, Integer, Integer> sum = (a, b) -> {
-            System.out.println("Evaluating the function now");
+            dummy.doNothing();
             return a + b;
         };
 
         Function1<Integer, Integer> partialAppliedSum = sum.apply(2);
 
-        System.out.println("After applying the first parameter");
-
-        Integer allParamsAppliedSum = partialAppliedSum.apply(3);
-
-        System.out.println("After applying the second parameter");
-
-        assertEquals(new Integer(5), allParamsAppliedSum);
+        verify(dummy, never()).doNothing();
+        assertEquals(new Integer(5), partialAppliedSum.apply(3));
+        verify(dummy).doNothing();
     }
 
     @Test
