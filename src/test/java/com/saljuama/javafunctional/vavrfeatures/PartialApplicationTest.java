@@ -1,4 +1,4 @@
-package com.saljuama.dojo.javafunctional.functionalfeatures;
+package com.saljuama.javafunctional.vavrfeatures;
 
 import io.vavr.*;
 import org.junit.Test;

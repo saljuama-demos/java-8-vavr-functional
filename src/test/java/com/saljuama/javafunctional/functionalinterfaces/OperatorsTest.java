@@ -1,4 +1,4 @@
-package com.saljuama.dojo.javafunctional.functionalinterfaces;
+package com.saljuama.javafunctional.functionalinterfaces;
 
 import org.junit.Test;
 

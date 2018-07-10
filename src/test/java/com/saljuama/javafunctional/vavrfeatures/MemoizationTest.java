@@ -1,4 +1,4 @@
-package com.saljuama.dojo.javafunctional.functionalfeatures;
+package com.saljuama.javafunctional.vavrfeatures;
 
 import io.vavr.Function0;
 import io.vavr.collection.Stream;
