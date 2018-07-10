@@ -224,3 +224,13 @@ is defined.
 
 Memoization is an optimization technique used primarily to speed up computer programs by storing the results of expensive
 function calls and returning the cached result when the same inputs occur again.
+
+
+## High Order Functions
+
+A high order function is a function that can take functions as parameters and/or return functions.
+
+Trying to think in high order functions from scratch is not easy, I'd personally recommend to start writing code as normal,
+and produce them via refactoring. When you see lines of codes repeated, usually you'll extract a method, so when you see
+lines of codes that are very similar, you can extract a high order function and capture these small differences with a
+function, resulting in a high order function.
