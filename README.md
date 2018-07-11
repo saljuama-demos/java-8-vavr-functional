@@ -234,3 +234,25 @@ Trying to think in high order functions from scratch is not easy, I'd personally
 and produce them via refactoring. When you see lines of codes repeated, usually you'll extract a method, so when you see
 lines of codes that are very similar, you can extract a high order function and capture these small differences with a
 function, resulting in a high order function.
+
+### Algebraic Data Types from VAVR and Higher Order Functions
+
+VAVR includes different monads representing both sum (OR) and product (AND) ADTs that include an API with some high 
+order functions.
+
+#### Sum ADTs 
+
+Sum types include:
+
+- Option
+- Try
+- Either
+
+The most commonly used high order functions are:
+
+- map
+- flatMap 
+- filter
+- collect
+- peek
+- forEach
