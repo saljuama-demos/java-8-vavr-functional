@@ -15,7 +15,7 @@ public class MemoizationTest {
 
     class DummyHelper {
         Integer dummyInt() {
-            return 10;
+            return 1337;
         }
     }
 
@@ -28,7 +28,7 @@ public class MemoizationTest {
         Function0<Integer> dummyFunction = () -> dummyHelper.dummyInt();
         Function0<Integer> memoizedDummyFunction = dummyFunction.memoized();
 
-        Stream.from(0).take(10).forEach(x -> memoizedDummyFunction.apply());
+        Stream.range(0, 10).forEach(x -> memoizedDummyFunction.apply());
 
         verify(dummyHelper, times(1)).dummyInt();
     }

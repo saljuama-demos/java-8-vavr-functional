@@ -44,8 +44,7 @@ public class CurryingTest {
     @Test
     public void currying_can_be_used_to_reduce_boilerplate() {
 
-        Function2<String, Integer, String> stringRepeater = (string, number) ->
-                Stream.from(0).take(number).map(x -> string).mkString();
+        Function2<String, Integer, String> stringRepeater = (string, number) -> Stream.range(0, number).map(x -> string).mkString();
 
         String hello2 = stringRepeater.apply("hello", 2);
         String hello3 = stringRepeater.apply("hello", 3);

@@ -46,8 +46,7 @@ public class FunctionsTest {
     @Test
     public void there_are_also_bi_functions() {
 
-        BiFunction<String, Integer, String> stringRepeater = (string, number) ->
-                Stream.from(0).take(number).map(x -> string).mkString();
+        BiFunction<String, Integer, String> stringRepeater = (string, number) -> Stream.range(0, number).map(x -> string).mkString();
 
         assertEquals("hellohellohello", stringRepeater.apply("hello", 3));
     }
