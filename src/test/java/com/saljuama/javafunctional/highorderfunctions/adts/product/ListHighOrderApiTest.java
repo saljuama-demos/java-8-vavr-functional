@@ -1,19 +1,34 @@
 package com.saljuama.javafunctional.highorderfunctions.adts.product;
 
+import io.vavr.PartialFunction;
 import io.vavr.Tuple;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
 import static io.vavr.control.Option.none;
 import static io.vavr.control.Option.some;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class ListHighOrderApiTest {
 
     private final List<Integer> numbers = List.of(1, 2, 3, 4, 5);
@@ -137,6 +152,9 @@ public class ListHighOrderApiTest {
     @Test
     public void lists_can_be_sliced_in_different_ways() {
 
+        assertEquals(new Integer(1), numbers.head());
+        assertEquals(List.of(2, 3, 4, 5), numbers.tail());
+
         Predicate<Integer> isFour = x -> x == 4;
         Predicate<Integer> isNotFour = isFour.negate();
 
@@ -147,19 +165,221 @@ public class ListHighOrderApiTest {
         assertEquals(List.of(4, 5), numbers.dropUntil(isFour));
 
         assertEquals(List.of(1, 2, 3), numbers.takeWhile(isNotFour));
-        assertEquals(List.of(4,5), numbers.dropWhile(isNotFour));
+        assertEquals(List.of(4, 5), numbers.dropWhile(isNotFour));
 
         assertEquals(List.of(4, 5), numbers.takeRight(2));
         assertEquals(List.of(1, 2, 3), numbers.dropRight(2));
 
-        // no take right until
+        // no take right until :(
         assertEquals(List.of(1, 2, 3, 4), numbers.dropRightUntil(isFour));
 
-        // no take right while
+        // no take right while :(
         assertEquals(List.of(1, 2, 3, 4), numbers.dropRightWhile(isNotFour));
-
     }
 
-    // TODO: collect peek scan sort zip unzip find
+    @Test
+    public void lists_can_be_queried_to_find_if_it_contains_an_element_satisfying_a_condition() {
 
+        Predicate<Integer> isEven = x -> x % 2 == 0;
+        Predicate<Integer> isTen = x -> x == 10;
+
+        assertEquals(some(2), numbers.find(isEven));
+        assertEquals(none(), numbers.find(isTen));
+
+        assertEquals(some(4), numbers.findLast(isEven));
+        assertEquals(none(), numbers.findLast(isTen));
+    }
+
+    @Test
+    public void lists_can_be_sorted_with_customizations() {
+
+        Function<Integer, Integer> changeSignOnOddNumbers = x -> {
+            if (x % 2 != 0) return x * -1;
+            else return x;
+        };
+
+        assertEquals(List.of(1, 2, 3, 4, 5), numbers.sorted());
+
+        assertEquals(List.of(5, 3, 1, 2, 4), numbers.sortBy(changeSignOnOddNumbers));
+
+        Comparator<Integer> descendingOrder = (x, y) -> y - x;
+
+        assertEquals(List.of(5, 4, 3, 2, 1), numbers.sorted(descendingOrder));
+
+        assertEquals(List.of(4, 2, 1, 3, 5), numbers.sortBy(descendingOrder, changeSignOnOddNumbers));
+    }
+
+    class Person {
+        private String firstName;
+        private String lastName;
+
+        Person(String firstName, String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        String getFirstName() {
+            return firstName;
+        }
+
+        String getLastName() {
+            return lastName;
+        }
+
+//        TODO: EXPLORE HOW TO ACTUALLY USE THIS
+//        @Patterns
+//        static class $ {
+//            @Unapply
+//            static Tuple2<String, String> Person(Person p) {
+//                return Tuple.of(p.getFirstName(), p.getLastName());
+//            }
+//        }
+    }
+
+    @Test
+    public void lists_can_be_filtered_and_transform_the_outputs_using_partial_functions() {
+
+        List<Person> persons = List.of(
+                new Person("John", "Smith"),
+                new Person("Amanda", "Smith"),
+                new Person("Anna", "Tucker"),
+                new Person("Damian", "without last name")
+        );
+
+        // TODO: Find a way to use pattern matching extracting variables directly instead of using a guard
+        PartialFunction<Person, String> firstNamesOfSmiths = Case($(person -> "Smith".equals(person.getLastName())), x -> x.getFirstName());
+
+        assertEquals(List.of("John", "Amanda"), persons.collect(firstNamesOfSmiths));
+
+        assertEquals(List.of("John", "Amanda"), persons.filter(p -> "Smith".equals(p.getLastName())).map(p -> p.getFirstName()));
+    }
+
+    @Test
+    public void lists_can_be_combined_with_other_lists() {
+
+        assertEquals(
+                List.of(
+                        Tuple.of(1, "a"),
+                        Tuple.of(2, "b"),
+                        Tuple.of(3, "c"),
+                        Tuple.of(4, "d"),
+                        Tuple.of(5, "e")
+
+                ),
+                numbers.zip(letters)
+        );
+
+        assertEquals(
+                List.of(
+                        Tuple.of("a", 1),
+                        Tuple.of("b", 2),
+                        Tuple.of("c", 3),
+                        Tuple.of("x", 4),
+                        Tuple.of("x", 5)
+                ),
+                List.of("a", "b", "c").zipAll(numbers, "x", 0)
+        );
+
+        assertEquals(
+                List.of(
+                        Tuple.of("a", 1),
+                        Tuple.of("b", 2),
+                        Tuple.of("c", 3),
+                        Tuple.of("d", 4),
+                        Tuple.of("e", 5),
+                        Tuple.of("f", 0),
+                        Tuple.of("g", 0)
+                ),
+                List.of("a", "b", "c", "d", "e", "f", "g").zipAll(numbers, "x", 0)
+        );
+
+
+        BiFunction<String, Integer, String> combineLetterAndNumber = (letter, number) -> letter + number.toString();
+        assertEquals(
+                List.of("a1", "b2", "c3", "d4", "e5"),
+                letters.zipWith(numbers, combineLetterAndNumber)
+        );
+
+        BiFunction<Integer, Integer, Integer> multiplyByIndex = (number, index) -> number * index;
+        assertEquals(
+                List.of(0, 2, 6, 12, 20), // remember index start at 0
+                numbers.zipWithIndex(multiplyByIndex)
+        );
+    }
+
+    @Test
+    public void lists_can_be_unzipped_too() {
+
+        assertEquals(
+                Tuple.of(
+                        List.of(1, 2, 3, 4, 5),
+                        List.of(11, 12, 13, 14, 15)
+                ),
+                numbers.unzip(x -> Tuple.of(x, x + 10)));
+    }
+
+    @Test
+    public void lists_can_be_iterated_with_an_operation_that_accumulates_the_value() {
+
+        BiFunction<Integer, Integer, Integer> accumulateSum = (accumulator, number) -> accumulator + number;
+        assertEquals(
+                List.of(
+                        0, // accumulator = initial value
+                        1, // accumulator = accumulator + first number
+                        3, // accumulator = accumulator + second number
+                        6, // accumulator = accumulator + third number
+                        10,// accumulator = accumulator + fourth number
+                        15 // accumulator = accumulator + fifth number
+                ),
+                numbers.scan(0, accumulateSum) // same as scanLeft
+        );
+
+        assertEquals(
+                List.of(
+                        15, // perform operations on all elements + initial value
+                        14, // undo operation for first element
+                        12, // undo operation for first 2 elements
+                        9,  // undo operation for first 3 elements
+                        5,  // undo operation for first 4 elements
+                        0   // undo operation for all elements == initial value
+                ),
+                numbers.scanRight(0, accumulateSum)
+        );
+    }
+
+    class DummyHelper {
+        void doSomething(Integer x) { /* do something */ }
+    }
+
+    @Spy
+    private DummyHelper dummy = new DummyHelper();
+
+
+    @Test
+    public void side_effects_can_be_performed_when_iterating_list_elements_only_once_and_continue_doing_more_operations() {
+
+        Consumer<Integer> doSideEffect = number -> dummy.doSomething(number);
+
+        assertEquals(List.of(2, 3, 4, 5, 6), numbers.peek(doSideEffect).map(x -> x + 1));
+
+        verify(dummy, times(1)).doSomething(1);
+        verify(dummy, never()).doSomething(2);
+        verify(dummy, never()).doSomething(3);
+        verify(dummy, never()).doSomething(4);
+        verify(dummy, never()).doSomething(5);
+    }
+
+    @Test
+    public void side_effects_can_be_performed_when_iterating_list_elements_for_each_element_and_finish_execution() {
+
+        Consumer<Integer> doSideEffect = number -> dummy.doSomething(number);
+
+        numbers.forEach(doSideEffect);
+
+        verify(dummy).doSomething(1);
+        verify(dummy).doSomething(2);
+        verify(dummy).doSomething(3);
+        verify(dummy).doSomething(4);
+        verify(dummy).doSomething(5);
+    }
 }
